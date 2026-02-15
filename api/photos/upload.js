@@ -3,7 +3,7 @@ import { uploadPhoto } from '../_lib/r2.js';
 import { randomUUID } from 'crypto';
 
 export const config = {
-  api: { bodyParser: { sizeLimit: '5mb' } },
+  api: { bodyParser: { sizeLimit: '10mb' } },
 };
 
 export default async function handler(req, res) {
@@ -42,6 +42,6 @@ export default async function handler(req, res) {
     res.status(201).json({ photo });
   } catch (err) {
     console.error('Error uploading photo:', err);
-    res.status(500).json({ error: 'Failed to upload photo' });
+    res.status(500).json({ error: 'Failed to upload photo', detail: err.message });
   }
 }
