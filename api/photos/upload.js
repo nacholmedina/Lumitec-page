@@ -17,7 +17,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { image, contentType } = req.body || {};
+    const { image, contentType, description } = req.body || {};
 
     if (!image) {
       return res.status(400).json({ error: 'No image provided' });
@@ -38,7 +38,8 @@ export default async function handler(req, res) {
     const buffer = Buffer.from(image, 'base64');
 
     const id = randomUUID();
-    const photo = await uploadPhoto(id, buffer, type);
+    const desc = typeof description === 'string' ? description.trim().slice(0, 200) : '';
+    const photo = await uploadPhoto(id, buffer, type, desc);
     res.status(201).json({ photo });
   } catch (err) {
     console.error('Error uploading photo:', err);

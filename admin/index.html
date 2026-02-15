@@ -112,6 +112,14 @@
             Subir foto
           </button>
         </div>
+        <!-- Description -->
+        <div class="mt-4">
+          <label for="description" class="block text-sm font-semibold mb-1.5 text-brand-light/70">Descripción (opcional)</label>
+          <input
+            type="text" id="description" maxlength="200" placeholder="Ej: Nuevo panel LED disponible"
+            class="w-full sm:max-w-md px-4 py-2.5 rounded-xl bg-brand-gray border border-white/10 text-white placeholder-brand-light/30 focus:outline-none focus:border-brand-yellow/50 focus:ring-1 focus:ring-brand-yellow/30 transition text-sm"
+          >
+        </div>
         <!-- Preview -->
         <div id="preview-container" class="mt-4 hidden">
           <img id="preview-img" class="w-40 h-30 object-cover rounded-xl border border-white/10" alt="Preview">
@@ -261,6 +269,7 @@
           body: JSON.stringify({
             image: base64,
             contentType: selectedFile.type,
+            description: document.getElementById('description').value.trim(),
           }),
         });
 
@@ -279,6 +288,7 @@
         showStatus('Foto subida correctamente', 'success');
         selectedFile = null;
         fileInput.value = '';
+        document.getElementById('description').value = '';
         uploadText.textContent = 'Hacé clic o arrastrá una imagen aquí';
         previewContainer.classList.add('hidden');
         loadPhotos();
@@ -359,6 +369,7 @@
             <div class="aspect-[4/3]">
               <img src="${p.url}" alt="Foto" loading="lazy" class="w-full h-full object-cover">
             </div>
+            ${p.description ? `<p class="px-2 py-1.5 text-xs text-brand-light/60 truncate">${escapeText(p.description)}</p>` : ''}
             <button
               onclick="confirmDelete('${p.id}')"
               class="absolute top-2 right-2 w-8 h-8 bg-red-500/80 hover:bg-red-500 text-white rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
@@ -398,6 +409,12 @@
       if (type === 'success') uploadStatus.classList.add('text-green-400');
       else if (type === 'error') uploadStatus.classList.add('text-red-400');
       else uploadStatus.classList.add('text-brand-yellow');
+    }
+
+    function escapeText(str) {
+      const d = document.createElement('div');
+      d.textContent = str;
+      return d.innerHTML;
     }
 
     function fileToBase64(file) {
